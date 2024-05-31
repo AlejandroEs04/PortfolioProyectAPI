@@ -12,7 +12,7 @@ namespace PortfolioAPI.Dtos
         public string Model { get; set; } = "";
         public int CategoryID { get; set; }
         public bool Active { get; set; } = true;
-        public IEnumerable<ProductSpecification> Specifications { get; set; } = [];
-        public IEnumerable<ProductImage> Images { get; set; } = [];
+        public IEnumerable<ProductSpecificationAdd> Specifications { get; set; } = [];
+        public IEnumerable<ProductImageAdd> Images { get; set; } = [];
     }
 }
