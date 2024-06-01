@@ -1,6 +1,6 @@
 namespace PortfolioAPI.Dtos
 {
-    public partial class CategoryAdd
+    public partial class CategoryAddDto
     {
         public string CategoryName { get; set; } = "";
     }

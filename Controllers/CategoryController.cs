@@ -33,7 +33,7 @@ namespace PortfolioAPI.Controllers
         }
 
         [HttpPost]
-        public IActionResult AddNewCategory(CategoryAdd category)
+        public IActionResult AddNewCategory(CategoryAddDto category)
         {
             string sqlAddCategory = @"
                 INSERT INTO Category (CategoryName)

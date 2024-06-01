@@ -1,6 +1,6 @@
 namespace PortfolioAPI.Dtos
 {
-    public partial class UserAdd
+    public partial class UserAddDto
     {
         public string FirstName { get; set; } = "";
         public string LastName { get; set;} = "";

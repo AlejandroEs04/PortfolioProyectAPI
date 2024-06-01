@@ -32,7 +32,7 @@ namespace PortfolioAPI.Controllers
         }
 
         [HttpPost]
-        public IActionResult AddProduct(ProductAdd product)
+        public IActionResult AddProduct(ProductAddDto product)
         {
             string sqlAddProduct = @"
                 INSERT INTO Product

@@ -33,7 +33,7 @@ namespace PortfolioAPI.Controllers
         }
 
         [HttpPost]
-        public IActionResult AddNewSpecification(SpecificationAdd specification)
+        public IActionResult AddNewSpecification(SpecificationAddDto specification)
         {
             string sqlAddSpecification = @"
                 INSERT INTO Specification (SpecificationDesc)

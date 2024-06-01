@@ -1,5 +1,7 @@
+using System.Data;
 using System.Security.Cryptography;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
 using PortfolioAPI.Data;
 using PortfolioAPI.Dtos;
 using PortfolioAPI.Helpers;
@@ -27,48 +29,89 @@ namespace PortfolioAPI.Controllers
             return _dapper.LoadData<User>(sql);
         }
 
-        [HttpPost]
-        public IActionResult AddNewUser(UserAdd user)
+        [HttpGet("{userID}")]
+        public User GetOneUser(int userID)
         {
-            string sqlExistEmail = @"
-                SELECT * FROM [User]
-                WHERE Email like '" + user.Email + "' OR PhoneNumber like '" + user.PhoneNumber + "'";
+            string sql = @"SELECT * FROM [User] WHERE UserID = " + userID.ToString();
+            return _dapper.LoadDataSingle<User>(sql);
+        }
 
-            Console.WriteLine(sqlExistEmail);
-
-            IEnumerable<User> users = _dapper.LoadData<User>(sqlExistEmail);
-
-            if(users.Count() > 0)
+        [HttpPut]
+        public IActionResult UpdateUser(UserUpdateDto user)
+        {
+            if(user.Password != "")
             {
-                throw new Exception("There's someone else with this email or phone number");
+                byte[] passwordSalt = new byte[129 / 8];
+                using (RandomNumberGenerator rng = RandomNumberGenerator.Create())
+                {
+                    rng.GetNonZeroBytes(passwordSalt);
+                }
+
+                byte[] passwordHash = _authHelper.GetPasswordHash(user.Password, passwordSalt);
+                
+                string sqlUpdateAuth = @"
+                    UPDATE Auth
+                    SET
+                        PasswordHash = @PasswordHash, 
+                        PasswordSalt = @PasswordSalt
+                    WHERE UserID = " + user.UserID.ToString();
+
+                List<SqlParameter> sqlParameters = new List<SqlParameter>();
+
+                SqlParameter passwordSaltParameter = new SqlParameter("@PasswordSalt", SqlDbType.VarBinary);
+                passwordSaltParameter.Value = passwordSalt;
+
+                SqlParameter passwordHashParameter = new SqlParameter("@PasswordHash", SqlDbType.VarBinary);
+                passwordHashParameter.Value = passwordHash;
+
+                sqlParameters.Add(passwordSaltParameter);
+                sqlParameters.Add(passwordHashParameter);
+
+                if(!_dapper.ExecuteSqlWithParameters(sqlUpdateAuth, sqlParameters))
+                {
+                    throw new Exception("Failed to update password");
+                } 
             }
 
-            string sqlAddUser = @"
-                INSERT INTO [User] (FirstName, LastName, Email, PhoneNumber)
-                VALUES (
-                    '" + user.FirstName + @"', 
-                    '" + user.LastName + @"', 
-                    '" + user.Email + @"', 
-                    '" + user.PhoneNumber + @"'
-                )";
+            string updateUser = @"
+                UPDATE [User]
+                SET 
+                    FirstName = '" + user.FirstName + @"', 
+                    LastName = '" + user.LastName + @"', 
+                    Email = '" + user.Email + @"', 
+                    PhoneNumber = '" + user.PhoneNumber + @"', 
+                    Address = '" + user.Address + @"'
+                WHERE UserID = " + user.UserID.ToString();
 
-            // if(!_dapper.ExecuteSql(sqlAddUser))
-            // {
-            //     throw new Exception("Failed to create user");
-            // }
-
-            byte[] passwordSalt = new byte[129 / 8];
-            using (RandomNumberGenerator rng = RandomNumberGenerator.Create())
+            if(!_dapper.ExecuteSql(updateUser))
             {
-                rng.GetNonZeroBytes(passwordSalt);
+                throw new Exception("Failed to update user");
             }
 
-            byte[] passwordHash = new byte[0];
+            return Ok();
+        }
 
-            string sqlGetUserCreated = "SELECT MAX(UserID) AS UserID FROM [User]";
+        [HttpDelete("{userID}")]
+        public IActionResult DeleteUser(int userID)
+        {
+            string sqlDeleteAuth = @"
+                DELETE FROM Auth
+                WHERE UserID = " + userID.ToString();
 
-            // I need to finish this
-            
+            if(!_dapper.ExecuteSql(sqlDeleteAuth)) 
+            {
+                throw new Exception("Failed to delete user");
+            }
+
+            string sqlDeleteUser = @"
+                DELETE FROM [User]
+                WHERE UserID = " + userID.ToString();
+
+            if(!_dapper.ExecuteSql(sqlDeleteUser)) 
+            {
+                throw new Exception("Failed to delete user");
+            }
+
             return Ok();
         }
     }

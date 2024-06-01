@@ -1,6 +1,7 @@
 namespace PortfolioAPI.Dtos
 {
-    public partial class SpecificationAdd {
+    public partial class SpecificationAddDto 
+    {
         public string SpecificationDesc { get; set; } = "";
     }
 }
