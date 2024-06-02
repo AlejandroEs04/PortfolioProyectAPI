@@ -1,4 +1,3 @@
-using System.Diagnostics.Metrics;
 using Microsoft.AspNetCore.Mvc;
 using PortfolioAPI.Data;
 using PortfolioAPI.Dtos;
@@ -7,7 +6,7 @@ using PortfolioAPI.Models;
 namespace PortfolioAPI.Controllers
 {
     [ApiController]
-    [Route("/api/products")]
+    [Route("/Api/[controller]")]
 
     public class ProductController : Controller
     {
@@ -25,8 +24,15 @@ namespace PortfolioAPI.Controllers
             return _dapper.LoadData<Product>(sql);
         }
 
+        [HttpGet("{ProductId}")]
+        public Product GetOneProduct(int ProductId)
+        {
+            string sql = "SELECT * FROM Product WHERE ProductId = " + ProductId.ToString();
+            return _dapper.LoadDataSingle<Product>(sql);
+        }
+
         [HttpPost]
-        public IActionResult AddProduct(ProductAdd product)
+        public IActionResult AddProduct(ProductAddDto product)
         {
             string sqlAddProduct = @"
                 INSERT INTO Product
@@ -96,7 +102,38 @@ namespace PortfolioAPI.Controllers
         [HttpPut]
         public IActionResult UpdateProduct (Product product)
         {
+            string sqlUpdate = @"
+                UPDATE Product 
+                SET 
+                    ProductName = '" + product.ProductName +  @"', 
+                    ProductDesc = '" + product.ProductDesc +  @"', 
+                    UnitPrice = '" + product.UnitPrice +  @"', 
+                    UnitsInStock = '" + product.UnitsInStock +  @"', 
+                    UnitCost = '" + product.UnitCost +  @"', 
+                    Model = '" + product.Model +  @"', 
+                    Active = '" + product.Active +  @"', 
+                    CategoryID = '" + product.CategoryID +  @"'
+                WHERE ProductId = " + product.ProductID;
+
+            if(!_dapper.ExecuteSql(sqlUpdate)) 
+            {
+                throw new Exception("Failed to update product");
+            }
+            return Ok();
+        }
+
+        [HttpDelete("{ProductID}")]
+        public IActionResult DeleteProduct (int ProductID)
+        {
+            string sqlDelete = @"
+                DELETE FROM Product
+                WHERE ProductID = " + ProductID.ToString();
             
+            if(!_dapper.ExecuteSql(sqlDelete))
+            {
+                throw new Exception("Failed to delete product");
+            }
+
             return Ok();
         }
     }

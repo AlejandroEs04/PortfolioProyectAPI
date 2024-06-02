@@ -2,7 +2,7 @@ using PortfolioAPI.Models;
 
 namespace PortfolioAPI.Dtos
 {
-    public partial class ProductAdd
+    public partial class ProductAddDto
     {
         public string ProductName { get; set; } = "";
         public string ProductDesc { get; set; } = "";
@@ -12,7 +12,7 @@ namespace PortfolioAPI.Dtos
         public string Model { get; set; } = "";
         public int CategoryID { get; set; }
         public bool Active { get; set; } = true;
-        public IEnumerable<ProductSpecification> Specifications { get; set; } = [];
-        public IEnumerable<ProductImage> Images { get; set; } = [];
+        public IEnumerable<ProductSpecificationAddDto> Specifications { get; set; } = [];
+        public IEnumerable<ProductImageAddDto> Images { get; set; } = [];
     }
 }
