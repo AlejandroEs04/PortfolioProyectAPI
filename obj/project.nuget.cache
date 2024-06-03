@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "QsPL61hFofHLX6NqYNSvFk9g5XhDsSVoKp8iyY9RWSgkaxjNgbt36SCiyA3VMqe14DzQYKuIjrQ0jFUvn7X2OQ==",
+  "dgSpecHash": "cHE0qQG3N8AlJj5xe0CQGVKlXJF3012dNSvcK5MtlIG/35AN7dUClXkBaktiXeu8zZqvsFE1Ch5jM1Tr5JOvGQ==",
   "success": true,
-  "projectFilePath": "E:\\Users\\Default\\Documents\\Development Projects\\Software Development\\PortfolioAPI\\PortfolioAPI.csproj",
+  "projectFilePath": "C:\\Users\\2004e\\Desktop\\Development\\Software Development\\PortfolioProyectAPI\\PortfolioAPI.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\2004e\\.nuget\\packages\\automapper\\13.0.1\\automapper.13.0.1.nupkg.sha512",
     "C:\\Users\\2004e\\.nuget\\packages\\azure.core\\1.35.0\\azure.core.1.35.0.nupkg.sha512",

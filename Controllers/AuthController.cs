@@ -24,6 +24,8 @@ namespace PortfolioAPI.Controllers
         [HttpPost("Signup")]
         public IActionResult Register(UserAddDto user)
         {
+            int userId = 0;
+
             string sqlExistEmail = @"
                 SELECT * FROM [User]
                 WHERE Email like '" + user.Email + "' OR PhoneNumber like '" + user.PhoneNumber + "'";
@@ -32,22 +34,51 @@ namespace PortfolioAPI.Controllers
 
             if(users.Count() > 0)
             {
-                throw new Exception("There's someone else with this email or phone number");
+                string sqlGetUserId = @"
+                    SELECT UserID FROM [User] 
+                    WHERE Email = '" + user.Email + "' OR PhoneNumber = '" + user.PhoneNumber + "'";
+
+                userId = _dapper.LoadDataSingle<int>(sqlGetUserId);
+
+                string getAuthExist = @"
+                    SELECT * FROm Auth
+                    WHERE UserID  = " + userId.ToString();
+
+                IEnumerable<Auth> authExist = _dapper.LoadData<Auth>(getAuthExist);
+
+                if(authExist.Count() > 0)
+                {
+                    throw new Exception("There's someone else with this email or phone number");
+                }    
+
+                string sqlUpdateUser = @"
+                    UPDATE [User]
+                    SET Active = 'true'
+                    WHERE UserID = " + userId.ToString();    
+
+                if(!_dapper.ExecuteSql(sqlUpdateUser))
+                {
+                    throw new Exception("Failed to create user");
+                }        
+            } else {
+                string sqlAddUser = @"
+                    INSERT INTO [User] (FirstName, LastName, Email, PhoneNumber)
+                    VALUES (
+                        '" + user.FirstName + @"', 
+                        '" + user.LastName + @"', 
+                        '" + user.Email + @"', 
+                        '" + user.PhoneNumber + @"'
+                    )";
+
+                if(!_dapper.ExecuteSql(sqlAddUser))
+                {
+                    throw new Exception("Failed to create user");
+                }
+
+                string sqlGetUserCreated = "SELECT MAX(UserID) AS UserID FROM [User]";
+                userId = _dapper.LoadDataSingle<int>(sqlGetUserCreated);
             }
 
-            string sqlAddUser = @"
-                INSERT INTO [User] (FirstName, LastName, Email, PhoneNumber)
-                VALUES (
-                    '" + user.FirstName + @"', 
-                    '" + user.LastName + @"', 
-                    '" + user.Email + @"', 
-                    '" + user.PhoneNumber + @"'
-                )";
-
-            if(!_dapper.ExecuteSql(sqlAddUser))
-            {
-                throw new Exception("Failed to create user");
-            }
 
             byte[] passwordSalt = new byte[129 / 8];
             using (RandomNumberGenerator rng = RandomNumberGenerator.Create())
@@ -57,12 +88,9 @@ namespace PortfolioAPI.Controllers
 
             byte[] passwordHash = _authHelper.GetPasswordHash(user.Password, passwordSalt);
 
-            string sqlGetUserCreated = "SELECT MAX(UserID) AS UserID FROM [User]";
-            int newUserId = _dapper.LoadDataSingle<int>(sqlGetUserCreated);
-
             string sqlAddAuth = @"
                 INSERT INTO Auth (UserID, PasswordHash, PasswordSalt)
-                VALUES (" + newUserId + ", @PasswordHash, @PasswordSalt)";
+                VALUES (" + userId + ", @PasswordHash, @PasswordSalt)";
 
             List<SqlParameter> sqlParameters = new List<SqlParameter>();
 

@@ -2194,11 +2194,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "E:\\Users\\Default\\Documents\\Development Projects\\Software Development\\PortfolioAPI\\PortfolioAPI.csproj",
+      "projectUniqueName": "C:\\Users\\2004e\\Desktop\\Development\\Software Development\\PortfolioProyectAPI\\PortfolioAPI.csproj",
       "projectName": "PortfolioAPI",
-      "projectPath": "E:\\Users\\Default\\Documents\\Development Projects\\Software Development\\PortfolioAPI\\PortfolioAPI.csproj",
+      "projectPath": "C:\\Users\\2004e\\Desktop\\Development\\Software Development\\PortfolioProyectAPI\\PortfolioAPI.csproj",
       "packagesPath": "C:\\Users\\2004e\\.nuget\\packages\\",
-      "outputPath": "E:\\Users\\Default\\Documents\\Development Projects\\Software Development\\PortfolioAPI\\obj\\",
+      "outputPath": "C:\\Users\\2004e\\Desktop\\Development\\Software Development\\PortfolioProyectAPI\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -2213,7 +2213,6 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-        "C:\\Program Files\\dotnet\\library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -2226,11 +2225,6 @@
         "warnAsError": [
           "NU1605"
         ]
-      },
-      "restoreAuditProperties": {
-        "enableAudit": "true",
-        "auditLevel": "low",
-        "auditMode": "direct"
       }
     },
     "frameworks": {
@@ -2281,7 +2275,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.202/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.101/PortableRuntimeIdentifierGraph.json"
       }
     }
   }
