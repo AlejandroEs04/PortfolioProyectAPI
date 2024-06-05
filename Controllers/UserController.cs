@@ -104,7 +104,8 @@ namespace PortfolioAPI.Controllers
             }
 
             string sqlDeleteUser = @"
-                DELETE FROM [User]
+                Update [User]
+                    SET Active = 'false'
                 WHERE UserID = " + userID.ToString();
 
             if(!_dapper.ExecuteSql(sqlDeleteUser)) 

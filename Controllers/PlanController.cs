@@ -45,5 +45,40 @@ namespace PortfolioAPI.Controllers
 
             return Ok();
         }
+
+        [HttpPut]
+        public IActionResult UpdatePlan(Plan plan)
+        {
+            string sqlUpdatePlan = @"
+                UPDATE Plan 
+                SET 
+                    PlanName = '" + plan.PlanName + @"', 
+                    Price = " + plan.Price + @", 
+                    LogoURL = '" + plan.LogoURL + @"', 
+                    Active = '" + plan.Active + @"'
+                WHERE PlanID = " + plan.PlanID.ToString();
+
+            if(!_dapper.ExecuteSql(sqlUpdatePlan))
+            {
+                throw new Exception("Failed to update plan");
+            }
+
+            return Ok();
+        }
+
+        [HttpDelete("{planID}")]
+        public IActionResult DeletePlan(int planID)
+        {
+            string sqlDeletePlan = @"
+                DELETE FROM Plan 
+                WHERE PlanID = " + planID.ToString();
+
+            if(!_dapper.ExecuteSql(sqlDeletePlan))
+            {
+                throw new Exception("Failed to delete plan");
+            }
+
+            return Ok();
+        }
     }
 }

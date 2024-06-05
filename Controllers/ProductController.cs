@@ -126,7 +126,8 @@ namespace PortfolioAPI.Controllers
         public IActionResult DeleteProduct (int ProductID)
         {
             string sqlDelete = @"
-                DELETE FROM Product
+                UPDATE Product
+                SET Active = 'false'
                 WHERE ProductID = " + ProductID.ToString();
             
             if(!_dapper.ExecuteSql(sqlDelete))
